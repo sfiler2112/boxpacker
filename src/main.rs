@@ -141,9 +141,13 @@ impl BoxPacker {
      * Return the orientation with the highest maximum
      */
 
+    println!("#############################################################");
+    println!("# The boxpacker is finding the optimal product orientation! #");
+    println!("#############################################################");
+
+
     let mut optimal_orientation: Orientation = Default::default(); /* default orientation is 0,0,0 */
     println!("starting values for optimal_orientation: {} {} {}", optimal_orientation.x_axis, optimal_orientation.y_axis, optimal_orientation.z_axis);
-    println!("testing tuple fn: {:?}", optimal_orientation.get_orientation_tuple());
 
     let mut max_products_packable = self.get_num_products_packable(self.product.dimensions);
     println!("Max products packable with starting orientation: {}", max_products_packable);
@@ -159,9 +163,12 @@ impl BoxPacker {
     for altori in alt_orientations {
       /* set the product orientation to the current alternative */
       self.product.orientation = altori;
+
       /* get the dimensions for this orientation */
       let alt_dim = self.product.get_rotated_dimensions();
+
       /* get the number of products (columns x rows x layers) that fit in the container */
+      /*
       let columns = (self.container.dimensions.width / alt_dim.width) as i32;
       println!("columns: {}", columns);
       let rows = (self.container.dimensions.depth / alt_dim.depth) as i32;
@@ -169,7 +176,10 @@ impl BoxPacker {
       let layers = (self.container.dimensions.height / alt_dim.height) as i32;
       println!("layers: {}", layers);
       let alt_products_packable = columns * rows * layers;
+      */
+      let alt_products_packable = self.get_num_products_packable(alt_dim);
       println!("number of products packable: {}", alt_products_packable);
+
       /* compare to the number of products for the current optimal orientation */
       if alt_products_packable > max_products_packable {
         max_products_packable = alt_products_packable;
@@ -226,6 +236,21 @@ fn user_create_container() -> Container {
   user_cont
 }
 
+fn user_create_product() -> Product {
+  println!("*******************************************");
+  println!("* Create the product that will be packed! *");
+  println!("*******************************************");
+
+  let user_prod = Product {
+    dimensions: user_create_rectangular_prism(),
+    orientation: Default::default()
+  };
+
+  println!("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
+  user_prod
+}
+
 fn main() {
     println!("Let's get some user input!");
 
@@ -237,6 +262,7 @@ fn main() {
     /*
      * Get the product dimensions from the user
      */
+    /*
     let mut height = String::new();
     println!("What is the product box height?");
     io::stdin().read_line(&mut height).unwrap();
@@ -255,6 +281,8 @@ fn main() {
         z_axis: 0,
       },
     };
+    */
+    let product_box = user_create_product();
 
     let mut box_packer_boy = BoxPacker {
       container: container_box,
