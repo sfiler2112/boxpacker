@@ -251,9 +251,72 @@ fn user_create_product() -> Product {
   user_prod
 }
 
-fn main() {
-    println!("Let's get some user input!");
+#[derive(Debug, Copy, Clone)]
+enum MainMenuOption {
+  CreateBoxPacker,
+  RunBoxPacker,
+  Exit,
+}
 
+#[derive(Debug)]
+struct MainMenuItem {
+  option: MainMenuOption,
+  text: String
+}
+
+fn display_main_menu_options(menu_options: &[MainMenuItem]) {
+  println!("");
+
+  /* Display the text for each menu option */
+  let mut index = 1;
+  for option in menu_options {
+    println!("[{index}] {}", option.text);
+    index += 1;
+  };
+
+}
+
+fn get_user_selection() -> usize {
+  let mut user_selection = String::new();
+  println!("Please enter your selection:");
+  io::stdin().read_line(&mut user_selection).unwrap();
+
+  user_selection.trim().parse::<usize>().unwrap()
+}
+
+fn run_main_menu() {
+  let options: [MainMenuItem; 3];
+  options = [
+    MainMenuItem {
+      option: MainMenuOption::CreateBoxPacker,
+      text: String::from("Create a new Box Packer!"), 
+    },
+    MainMenuItem {
+      option: MainMenuOption::RunBoxPacker,
+      text: String::from("Start using the Box Packer!"),
+    },
+    MainMenuItem {
+      option: MainMenuOption::Exit,
+      text: String::from("Exit the program!"),
+    },
+  ];
+ 
+  /* 
+   * Show the main menu options the user can choose from.
+   * The options are numbered according to their order in "options"
+   * options[0] is listed as 1, option[1] as 2, etc.
+   */
+  display_main_menu_options(&options);
+  /* 
+   * The user selection is returned as the number the options was listed as.
+   * 1 must be subtracted from the user selection to get the index for the selected option.
+   */
+  let selected_option = options[get_user_selection() - 1].option;
+  println!("{:?}", selected_option);
+}
+
+fn main() {
+    run_main_menu();
     /* 
      * Get the container dimensions from the user
      */
